@@ -1,6 +1,7 @@
 .data
 	startMessage: .asciiz "Digite um número para encontrar seu fatorial: " # texto para indagar o usuário sobre o número
 	resultMessage: .ascii "\nO fatorial do número é " # texto para exivir a mensagem final
+	exceptionMessage: .ascii "\nEscolha com um número maior do que 1"
 	number: .word 0 # inicializa um espaço para o número com zero
 	answer: .word 0 # inicializa um espaço para para a resposta final com zero
 .text
@@ -11,6 +12,8 @@
 		
 		li $v0, 5 # carrega o código do serviço para armazenar inteiros
 		syscall # executa comando armazenado em $v0
+		
+		ble $v0, 1, exception
 		
 		sw $v0, number # guarda o valor lido em $v0 na espaço previamente reservado
 		
@@ -26,8 +29,7 @@
 		lw $a0, answer # armazena inteiro a ser mostrado
 		syscall # executa comando armazenado em $v0
 		
-		li $v0, 10 # carrega o código do serviço que finaliza o programa
-		syscall # executa comando armazenado em $v0
+		j exit # sai do programa
 		
 	factorial:
 		subu $sp, $sp, 8 # carrega dois espaço na pilha
@@ -48,3 +50,14 @@
 			lw $s0, 4($sp) # carrega o valor de 4($sp) em $s0
 			addu $sp, $sp, 8 # volta pilha para o início
 			jr $ra # retorna para o endereço armazenado
+			
+	exception:
+		li $v0, 4 # carrega o código do serviço para imprimir texto
+		la $a0, exceptionMessage # armazena texto a ser mostrado
+		syscall # executa comando armazenado em $v0
+		
+		j exit # sai do programa
+		
+	exit:
+		li $v0, 10 # carrega o código do serviço que finaliza o programa
+		syscall # executa comando armazenado em $v0
