@@ -52,10 +52,10 @@
 # sob um texto também recebido como argumento
 # e retornar a contagem em um registrado também recebido como argumento
 .macro str_contains(%str, %char, %regForReturn)
-	li $t0, 0 # registrado contador para iteração do texto
+	li $t0, 0 # registrador contador para iteração do texto
 	
 	loop:
-		add $t1, %str, $t0 # registrado $t1 recebe endereço do texto na posição do contador. Ex: $t1 = %str[$t0]
+		add $t1, %str, $t0 # registrador $t1 recebe endereço do texto na posição do contador. Ex: $t1 = %str[$t0]
 		
 		lb $t2, 0($t1) # $t2 recebe valor do endereço (letra/caractere)
 	
@@ -71,11 +71,6 @@
 		j loop # salta para inicio do loop, verificando se é o fim do texto
 		
 	end_loop: # fim do loop. Fim da macro
-.end_macro
-
-.macro finish()
-	li $v0, 10
-	syscall
 .end_macro
 
 main:		
